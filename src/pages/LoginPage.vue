@@ -8,7 +8,7 @@
           <label for="email">Email</label>
           <input
             id="email"
-            v-model="email"
+            v-model="user.email"
             type="email"
             required
             placeholder="you@example.com"
@@ -19,7 +19,7 @@
           <label for="password">Password</label>
           <input
             id="password"
-            v-model="password"
+            v-model="user.password"
             type="password"
             required
             placeholder="Enter your password"
@@ -38,14 +38,39 @@
 
 <script setup>
 import { ref } from 'vue'
+import api from '@/api'
+import { useAuthStore } from '@/stores/auth'
+//import { email } from '@vuelidate/validators'
 
-const email = ref('')
-const password = ref('')
+const authStore = useAuthStore()
 
-const handleLogin = () => {
-  console.log('Email:', email.value)
-  console.log('Password:', password.value)
-  // Your login logic with Axios or other
+const user = ref({
+  email:"",
+  password:"",
+})
+
+const handleLogin = async () => {
+  try{
+      const formData = new FormData()
+      formData.append('email', user.value.email)
+      formData.append('password', user.value.password)
+
+      const response = await api.post(`/login`, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    }
+    })
+    console.log(response.data)
+
+    authStore.setTokens({
+      accessToken: response.data.access_token,
+      refreshToken: response.data.refresh_token,
+    });
+
+    authStore.setUser(response.data.user)
+  }catch(error){
+    console.error()
+  }
 }
 </script>
 
