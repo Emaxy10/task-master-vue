@@ -31,6 +31,7 @@
         </div>
 
         <button type="submit" class="submit-btn">Login</button>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </form>
     </div>
   </div>
@@ -43,6 +44,7 @@ import { useAuthStore } from '@/stores/auth'
 //import { email } from '@vuelidate/validators'
 
 const authStore = useAuthStore()
+const errorMessage = ref('');
 
 const user = ref({
   email:"",
@@ -69,7 +71,7 @@ const handleLogin = async () => {
 
     authStore.setUser(response.data.user)
   }catch(error){
-    console.error()
+     errorMessage.value = 'Login failed. Please check your credentials.';
   }
 }
 </script>
