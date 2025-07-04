@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="submit-btn">Login</button>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
       </form>
     </div>
   </div>
@@ -40,6 +40,7 @@
 <script setup>
 import { ref } from 'vue'
 import api from '@/api'
+import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
 //import { email } from '@vuelidate/validators'
 
@@ -70,6 +71,7 @@ const handleLogin = async () => {
     });
 
     authStore.setUser(response.data.user)
+    router.push('/')
   }catch(error){
      errorMessage.value = 'Login failed. Please check your credentials.';
   }

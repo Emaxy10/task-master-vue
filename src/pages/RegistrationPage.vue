@@ -8,45 +8,64 @@
           <label for="name">Name</label>
           <input
             id="name"
-            v-model="name"
+            v-model="user.name"
             type="text"
             required
             placeholder="Your full name"
           />
+        </div><div v-if="isSubmitted && v$.name.$error">
+          <span style="color: red;" v-if="v$.name.required.$invalid"> Username is required</span>
         </div>
 
         <div class="form-group">
           <label for="email">Email</label>
           <input
             id="email"
-            v-model="email"
+            v-model="user.userEmail"
             type="email"
             required
             placeholder="you@example.com"
           />
         </div>
+        
+      <div v-if="isSubmitted && v$.userEmail.$error">
+          <span style="color: red;" v-if="v$.userEmail.required.$invalid"> Email is required</span><br>
+          <span style="color: red;" v-if="v$.userEmail.emailIsValid.$invalid"> {{ v$.userEmail.emailIsValid.$message }}</span>
+      </div>
 
         <div class="form-group">
           <label for="password">Password</label>
           <input
             id="password"
-            v-model="password"
+            v-model="user.password"
             type="password"
             required
             placeholder="Create a password"
           />
         </div>
+          <div v-if="isSubmitted && v$.password.$error">
+          <span style="color: red;" v-if="v$.password.required.$invalid"> Password is required</span>
+          <span style="color: red;" v-if="v$.password.minLength.$invalid"> Password be at least 8 characters</span><br>
+          <span style="color: red;" v-if="v$.password.containsNumber.$invalid"> {{ v$.password.containsNumber.$message }}</span><br>
+          <span style="color: red;" v-if="v$.password.containsSpecialChar.$invalid">{{ v$.password.containsSpecialChar.$message }}</span><br>
+          <span style="color: red;" v-if="v$.password.containsCapitalLetter.$invalid"> {{ v$.password.containsCapitalLetter.$message }}</span><br>
+      </div>
 
         <div class="form-group">
           <label for="confirmPassword">Confirm Password</label>
           <input
             id="confirmPassword"
-            v-model="confirmPassword"
+            v-model="user.confirmPassword"
             type="password"
             required
             placeholder="Confirm your password"
           />
         </div>
+
+           <div v-if="isSubmitted && v$.confirmPassword.$error">
+          <span style="color: red;" v-if="v$.confirmPassword.required.$invalid"> confirm password is required</span><br>
+          <span style="color: red;" v-if="v$.confirmPassword.sameAsPassword.$invalid"> Password does not match</span>
+      </div>
 
         <button type="submit" class="submit-btn">Register</button>
 
@@ -60,26 +79,99 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import api from '@/api'
+import useVuelidate from '@vuelidate/core';
+import { required,  minLength, helpers, email } from '@vuelidate/validators'
+import router from '@/router';
 
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
+ // Custom validators
+    const containsSpecialChar = (value) => /[!@#$%^&*()\-_=+{};:,<.>]/.test(value);
+    const containsNumber = (value) => /\d/.test(value);
+    const containsCapitalLetter = (value) => /[A-Z]/.test(value);
+    const emailIsValid = (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
 
-const handleRegister = () => {
-  if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match.')
-    return
-  }
+    const passwordMatch = () => {
+        const password = user.value.password;
+        const confirm_pass = user.value.confirmPassword;
 
-  console.log('Registering:', {
-    name: name.value,
-    email: email.value,
-    password: password.value,
-  })
+        return confirm_pass === password
+    }
 
+     //set validation rules
+
+     const rules = computed(() => {
+        return{
+            name: {required},
+
+            userEmail: {required, email,
+                emailIsValid: helpers.withMessage(
+                    'Please use a valid email.',
+                    emailIsValid
+                ),
+            },
+            password: {required, minLength: minLength(8),
+                containsSpecialChar: helpers.withMessage(
+                'Password must contain at least one special character.',
+                containsSpecialChar
+            ), containsNumber: helpers.withMessage(
+                'Password must contain at least one number.',
+                containsNumber
+            ),
+            containsCapitalLetter: helpers.withMessage(
+                'Password must contain at least one capital letter.',
+                containsCapitalLetter
+            ),
+            },
+            confirmPassword:{required,
+                 sameAsPassword: helpers.withMessage(
+                    'Passwords do no match,',
+                    passwordMatch
+                 )}
+        };  
+       
+    });
+
+
+const user = ref({
+  name:"",
+  userEmail:"",
+  password:"",
+  confirmPassword:""
+})
+
+ //initialize vuelidate
+  const v$ = useVuelidate(rules, user)
+
+  // Track if the form has been submitted
+   const isSubmitted = ref(false);
+
+const handleRegister = async() => {
+
+  // Mark the form as submitted
+     isSubmitted.value = true;
+  
   // Add registration logic here (e.g., API call with axios)
+    // Validate form
+       const isValid = await v$.value.$validate();
+        if(!isValid){
+            console.error('Validation error', v$.value.$errors);
+            return;
+        }
+
+        try{
+            const formData = new FormData()
+            formData.append('name', user.value.name)
+            formData.append('email', user.value.userEmail)
+            formData.append('password', user.value.password)
+
+            const response = await api.post(`/register`, formData)
+
+            console.log(response.data)
+            router.push('/login')
+        }catch(error){
+          console.error('Registration failed:', error.response?.data || error.message);
+        }
 }
 </script>
 
@@ -167,4 +259,5 @@ input:focus {
 .login-link a:hover {
   text-decoration: underline;
 }
+
 </style>
