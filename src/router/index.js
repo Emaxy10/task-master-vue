@@ -3,6 +3,7 @@ import LoginPage from '@/pages/LoginPage.vue'
 import TaskAppIntro from '@/components/TaskAppIntro.vue'
 import RegistrationPage from '@/pages/RegistrationPage.vue'
 import CreateTask from '@/pages/CreateTask.vue'
+import UserProfilePage from '@/pages/UserProfilePage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
     path: '/create/task',
     name: 'create-task',
     component: CreateTask
+  }
+  ,{
+    path: '/profile',
+    name: 'user-profile',
+    component: UserProfilePage
   }
 ]
 
