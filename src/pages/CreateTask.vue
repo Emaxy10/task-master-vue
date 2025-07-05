@@ -128,6 +128,7 @@
 </template>
 
 <script setup>
+import api from '@/api'
 import { ref } from 'vue'
 
 const daysOfWeek = [
@@ -157,7 +158,40 @@ const task = ref({
 })
 
 
-const handleSubmit = () => {
+const handleSubmit = async() => {
+  try{
+
+    const formData = new FormData()
+
+    formData.append('title', task.value.title)
+    formData.append('description', task.value.description || '')
+    formData.append('start_date', task.value.start_date || '')
+    formData.append('end_date', task.value.end_date || '')
+    formData.append('due_date', task.value.due_date || '')
+    formData.append('status', 'pending')
+    formData.append('is_completed', task.value.is_completed ? '1' : '0')
+    formData.append('completed_at', task.value.completed_at || '')
+    formData.append('is_recurring', task.value.is_recurring ? '1' : '0')
+    formData.append('recurrence_rule', task.value.recurrence_rule || '')
+
+    // Add weekly_day only if recurrence is weekly
+    if (task.value.recurrence_rule === 'weekly') {
+      formData.append('weekly_day', task.value.weekly_day || '')
+    }
+
+    // Add custom_date and custom_time only if recurrence is custom
+    if (task.value.recurrence_rule === 'custom') {
+      formData.append('custom_date', task.value.custom_date || '')
+      formData.append('custom_time', task.value.custom_time || '')
+    }
+
+
+    const response = await api.post('/tasks', formData);
+    console.log(response.data)
+
+  }catch(error){
+    console.error('Task could not be created:', error.response?.data || error.message);
+  }
   console.log('Submitted Task:', task.value)
   // You can post to your backend with axios or fetch
 }
