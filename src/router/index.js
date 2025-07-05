@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '@/pages/LoginPage.vue'
 import TaskAppIntro from '@/components/TaskAppIntro.vue'
 import RegistrationPage from '@/pages/RegistrationPage.vue'
+import CreateTask from '@/pages/CreateTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -18,6 +19,10 @@ const routes = [
     path: '/register',
     name: 'register-page',
     component: RegistrationPage
+  },{
+    path: '/create/task',
+    name: 'create-task',
+    component: CreateTask
   }
 ]
 

@@ -1,12 +1,6 @@
 <template>
   <div>
-    <header>
-      <div class="logo">TaskMaster</div>
-      <div class="auth-buttons">
-        <router-link to="/login">Login</router-link>
-        <router-link to="/register">Register</router-link>
-      </div>
-    </header>
+   
 
     <main>
       <h1>Welcome to TaskMaster</h1>
@@ -29,7 +23,7 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+//import { RouterLink } from 'vue-router';
 
 </script>
 
