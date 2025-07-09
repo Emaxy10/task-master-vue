@@ -1,6 +1,6 @@
 <template>
   <div class="profile-container">
-    <h1>{{ user.name }}'s Task Dashboard</h1>
+    <h1>{{ user?.name }}'s Task Dashboard</h1>
 
     <!-- Completed Tasks -->
     <section class="task-section">
@@ -36,38 +36,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed  } from 'vue'
-//import axios from 'axios'
+import { ref, onMounted, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import api from '@/api'
 
-// Replace with actual user info or get from Vuex/store
-const user = ref({
-  name: 'John Doe',
-  id: 1,
-})
-
+const authStore = useAuthStore()
+const user = authStore.user
 const tasks = ref([])
 
-const fetchTasks = async () => {
-  try {
-    const response = await api.get('/tasks')
-    tasks.value = response.data.tasks || response.data // depends on your backend
+const completedTasks = computed(() =>
+  tasks.value.filter(task => task.status === 'completed')
+)
 
-    console.log(tasks.value);
-  } catch (error) {
-    console.error('Error fetching tasks:', error)
-  }
-}
+const ongoingTasks = computed(() =>
+  tasks.value.filter(task => task.status !== 'completed')
+)
 
 const deleteTask = async (id) => {
   if (!confirm('Are you sure you want to delete this task?')) return
 
   try {
-    await api.delete(`/tasks/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`
-      }
-    })
+    await api.delete(`/tasks/${id}`)
     tasks.value = tasks.value.filter(task => task.id !== id)
   } catch (error) {
     console.error('Delete failed:', error)
@@ -75,21 +64,20 @@ const deleteTask = async (id) => {
 }
 
 const editTask = (task) => {
-  // Navigate or open modal
   alert(`Redirect to edit task with ID ${task.id}`)
-  // You could also use: router.push(`/tasks/${task.id}/edit`)
 }
 
-const completedTasks = computed(() =>
-  tasks.value.filter(t => t.status === 'completed')
-)
-
-const ongoingTasks = computed(() =>
-  tasks.value.filter(t => ['pending', 'in_progress'].includes(t.status))
-)
-
-onMounted(fetchTasks)
+onMounted(async () => {
+  try {
+    const response = await api.get('/user/tasks')
+    tasks.value = response.data.tasks
+    console.log(tasks.value)
+  } catch (error) {
+    console.error('Error fetching tasks:', error)
+  }
+})
 </script>
+
 
 <style scoped>
 .profile-container {
