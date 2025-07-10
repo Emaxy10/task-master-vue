@@ -24,8 +24,7 @@
           <p>{{ task.description }}</p>
           <p><strong>Status:</strong> {{ task.status }}</p>
           <div class="task-actions">
-            <button @click="editTask(task)">Edit</button>
-            <button @click="editTask(task)">Reschedule</button>
+            <router-link class="button" :to="`/task/edit/${task?.id}`">Reschedule</router-link>
             <button class="delete-btn" @click="deleteTask(task.id)">Delete</button>
           </div>
         </div>
@@ -63,15 +62,12 @@ const deleteTask = async (id) => {
   }
 }
 
-const editTask = (task) => {
-  alert(`Redirect to edit task with ID ${task.id}`)
-}
 
 onMounted(async () => {
   try {
     const response = await api.get('/user/tasks')
     tasks.value = response.data.tasks
-    console.log(tasks.value)
+    //console.log(tasks.value)
   } catch (error) {
     console.error('Error fetching tasks:', error)
   }
@@ -145,5 +141,16 @@ h1 {
 
 .ongoing {
   border-left: 4px solid #007bff;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #4f46e5; /* Indigo-600 */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 </style>

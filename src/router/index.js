@@ -4,6 +4,7 @@ import TaskAppIntro from '@/components/TaskAppIntro.vue'
 import RegistrationPage from '@/pages/RegistrationPage.vue'
 import CreateTask from '@/pages/CreateTask.vue'
 import UserProfilePage from '@/pages/UserProfilePage.vue'
+import EditTaskPage from '@/pages/EditTaskPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -29,6 +30,10 @@ const routes = [
     path: '/profile',
     name: 'user-profile',
     component: UserProfilePage
+  },{
+    path: '/task/edit/:id',
+    name: 'edit-task',
+    component: EditTaskPage
   }
 ]
 

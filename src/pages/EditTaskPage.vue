@@ -129,7 +129,15 @@
 
 <script setup>
 import api from '@/api'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute} from 'vue-router';
+import router from '@/router';
+
+const route = useRoute();
+
+const task_Id = ref(route.params.id)
+
+//console.log(task_Id.value)
 
 const daysOfWeek = [
   { label: 'Monday', value: 'monday' },
@@ -156,6 +164,16 @@ const task = ref({
   custom_date: '',         // used when recurrence_rule === 'custom'
   custom_time: '',         // used when recurrence_rule === 'custom'
 })
+
+onMounted( async() => {
+  try{
+      const response = await api.get(`/tasks/${task_Id.value}`)
+      task.value = response.data
+  }catch(error){
+    console.error(error)
+  }
+}
+)
 
 
 const handleSubmit = async() => {
@@ -186,8 +204,9 @@ const handleSubmit = async() => {
     }
 
 
-    const response = await api.post('/tasks', formData);
+    const response = await api.put(`/tasks/${task_Id.value}`, formData);
     console.log(response.data)
+    router.push('/profile')
 
   }catch(error){
     console.error('Task could not be created:', error.response?.data || error.message);
