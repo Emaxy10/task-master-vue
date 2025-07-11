@@ -71,7 +71,7 @@ const handleLogin = async () => {
     });
 
     authStore.setUser(response.data.user)
-    router.push('/')
+    router.push('/profile')
   }catch(error){
      errorMessage.value = 'Login failed. Please check your credentials.';
   }
