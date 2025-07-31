@@ -25,6 +25,7 @@
           <p><strong>Status:</strong> {{ task.status }}</p>
           <div class="task-actions">
             <router-link class="button" :to="`/task/edit/${task?.id}`">Reschedule</router-link>
+            <router-link class="view-btn" :to="`/task/${task?.id}`">View</router-link>
             <button class="delete-btn" @click="deleteTask(task.id)">Delete</button>
           </div>
         </div>
@@ -133,6 +134,16 @@ h1 {
 
 .task-actions .delete-btn {
   background-color: #dc3545;
+}
+
+.task-actions .view-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: lightgreen;
+  color: #070707;
+  font-size: 14px;
 }
 
 .task-actions button:hover {

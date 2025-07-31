@@ -5,6 +5,7 @@ import RegistrationPage from '@/pages/RegistrationPage.vue'
 import CreateTask from '@/pages/CreateTask.vue'
 import UserProfilePage from '@/pages/UserProfilePage.vue'
 import EditTaskPage from '@/pages/EditTaskPage.vue'
+import TaskPage from '@/pages/TaskPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -34,6 +35,10 @@ const routes = [
     path: '/task/edit/:id',
     name: 'edit-task',
     component: EditTaskPage
+  },{
+    path: '/task/:id',
+    name:'task',
+    component: TaskPage
   }
 ]
 

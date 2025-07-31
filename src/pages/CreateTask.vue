@@ -130,6 +130,7 @@
 <script setup>
 import api from '@/api'
 import { ref } from 'vue'
+import router from '@/router';
 
 const daysOfWeek = [
   { label: 'Monday', value: 'monday' },
@@ -189,10 +190,13 @@ const handleSubmit = async() => {
     const response = await api.post('/tasks', formData);
     console.log(response.data)
 
+    router.push('/profile')
+
   }catch(error){
     console.error('Task could not be created:', error.response?.data || error.message);
   }
   console.log('Submitted Task:', task.value)
+
   // You can post to your backend with axios or fetch
 }
 </script>
