@@ -10,6 +10,7 @@
           <h3>{{ task.title }}</h3>
           <p>{{ task.description }}</p>
           <p><strong>Completed:</strong> {{ task.completed_at || 'Yes' }}</p>
+          <router-link class="button" :to="`/task/${task?.id}`">View</router-link>
         </div>
       </div>
       <p v-else>No completed tasks yet.</p>
@@ -26,7 +27,8 @@
           <div class="task-actions">
             <router-link class="button" :to="`/task/edit/${task?.id}`">Reschedule</router-link>
             <router-link class="view-btn" :to="`/task/${task?.id}`">View</router-link>
-            <button class="delete-btn" @click="deleteTask(task.id)">Delete</button>
+             <button  @click="completeTask(task.id)">Mark as Done</button>           
+              <button class="delete-btn" @click="deleteTask(task.id)">Delete</button>
           </div>
         </div>
       </div>
@@ -63,16 +65,39 @@ const deleteTask = async (id) => {
   }
 }
 
+const completeTask = async(id) => {
+  try{
+      await api.patch(`/tasks/${id}/status`)
+      await fetchTasks() // Refresh the task list
+  }catch(error){
+    console.error(error)
+  }
+}
 
-onMounted(async () => {
+
+// onMounted(async () => {
+//   try {
+//     const response = await api.get('/user/tasks')
+//     tasks.value = response.data.tasks
+//     //console.log(tasks.value)
+//   } catch (error) {
+//     console.error('Error fetching tasks:', error)
+//   }
+// })
+
+const fetchTasks = async () => {
   try {
     const response = await api.get('/user/tasks')
     tasks.value = response.data.tasks
-    //console.log(tasks.value)
   } catch (error) {
     console.error('Error fetching tasks:', error)
   }
+}
+
+onMounted(() => {
+  fetchTasks()
 })
+
 </script>
 
 
