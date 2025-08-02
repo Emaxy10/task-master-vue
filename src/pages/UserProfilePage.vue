@@ -11,6 +11,10 @@
           <p>{{ task.description }}</p>
           <p><strong>Completed:</strong> {{ task.completed_at || 'Yes' }}</p>
           <router-link class="button" :to="`/task/${task?.id}`">View</router-link>
+          <button 
+            class="button" style="padding: 10px; background-color: lightcoral;" 
+            @click="undoTask(task.id)"
+          >Undo</button>
         </div>
       </div>
       <p v-else>No completed tasks yet.</p>
@@ -40,6 +44,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import router from '@/router'
 import api from '@/api'
 
 const authStore = useAuthStore()
@@ -72,6 +77,28 @@ const completeTask = async(id) => {
   }catch(error){
     console.error(error)
   }
+}
+
+//Undo Task. chnage completed task to pending
+
+const undoTask = async(id) => {
+  const prompt = "Would you like to make any readjustment to this task"
+  if(confirm(prompt) == true){ 
+    try{
+       await api.patch(`/tasks/${id}/status/undo`)
+    }catch(error){
+        console.error(error)
+      }
+      router.push(`/task/edit/${id}`)
+  }else{
+      try{
+        await api.patch(`/tasks/${id}/status/undo`)
+        await fetchTasks() // Refresh the task list
+      }catch(error){
+        console.error(error)
+      }
+  }
+  
 }
 
 
