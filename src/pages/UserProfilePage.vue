@@ -38,6 +38,33 @@
       </div>
       <p v-else>No ongoing tasks at the moment.</p>
     </section>
+
+      <!-- Overdue Tasks -->
+    
+    <section class="task-section">
+          <h2>Overdue Tasks</h2>
+      <div v-if="overdueTasks.length > 0">
+        <div class="task-card" v-for="task in overdueTasks" :key="task.id">
+          <h3>{{ task.title }}</h3>
+          <p>{{ task.description }}</p>
+          <p><strong>Completed:</strong> {{ task.completed_at || 'Yes' }}</p>
+          <router-link class="button" :to="`/task/${task?.id}`">View</router-link>
+          <router-link class="button" :to="`/task/edit/${task?.id}`">Reschedule</router-link>
+          <button class="delete-btn" @click="deleteTask(task.id)"
+            style="
+                padding: 6px 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                background-color: #dc3545;
+                color: #fff;
+                font-size: 14px;
+            "
+          >Delete</button>
+        </div>
+      </div>
+      <p v-else>No completed tasks yet.</p>
+    </section>
   </div>
 </template>
 
@@ -50,6 +77,7 @@ import api from '@/api'
 const authStore = useAuthStore()
 const user = authStore.user
 const tasks = ref([])
+const normalize = dateStr => new Date(dateStr + 'T23:59:59')
 
 const completedTasks = computed(() =>
   tasks.value.filter(task => task.status === 'completed')
@@ -57,6 +85,12 @@ const completedTasks = computed(() =>
 
 const ongoingTasks = computed(() =>
   tasks.value.filter(task => task.status !== 'completed')
+)
+
+const overdueTasks = computed(() => 
+  tasks.value.filter(task => normalize(task.end_date) < new Date() &&
+   task.status === 'pending'
+  )
 )
 
 const deleteTask = async (id) => {
@@ -116,6 +150,8 @@ const fetchTasks = async () => {
   try {
     const response = await api.get('/user/tasks')
     tasks.value = response.data.tasks
+
+    console.log(tasks.value)
   } catch (error) {
     console.error('Error fetching tasks:', error)
   }
