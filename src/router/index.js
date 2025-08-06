@@ -6,6 +6,7 @@ import CreateTask from '@/pages/CreateTask.vue'
 import UserProfilePage from '@/pages/UserProfilePage.vue'
 import EditTaskPage from '@/pages/EditTaskPage.vue'
 import TaskPage from '@/pages/TaskPage.vue'
+import SearchResultPage from '@/pages/SearchResultPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -39,6 +40,10 @@ const routes = [
     path: '/task/:id',
     name:'task',
     component: TaskPage
+  },{
+      path: '/search/',
+      name:'search_results',
+      component: SearchResultPage
   }
 ]
 
