@@ -28,6 +28,9 @@
           <h3>{{ task.title }}</h3>
           <p>{{ task.description }}</p>
           <p><strong>Status:</strong> {{ task.status }}</p>
+          <p
+            :style="getPriorityStyle(task.priority)"
+          ><strong>Priority:</strong> {{ task.priority }}</p>
           <div class="task-actions">
             <router-link class="button" :to="`/task/edit/${task?.id}`">Reschedule</router-link>
             <router-link class="view-btn" :to="`/task/${task?.id}`">View</router-link>
@@ -161,6 +164,17 @@ onMounted(() => {
   fetchTasks()
 })
 
+const getPriorityStyle = (priority) => {
+  const colorMap = {
+    low: 'green',
+    medium: 'orange', // use 'yellow' if you prefer, but orange has better readability
+    high: 'red'
+  }
+
+  return {
+    color: colorMap[priority.toLowerCase()] || 'black'
+  }
+}
 </script>
 
 

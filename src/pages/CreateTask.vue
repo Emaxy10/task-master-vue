@@ -59,6 +59,30 @@
             Mark as Completed
           </label> -->
 
+<!-- //Priority -->
+          <div class="form-group" >
+            <label><strong>Select Priority:</strong></label>
+            <div>
+              <label >
+                <input  type="radio" value="low" v-model="task.priority" />
+                Low
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="radio" value="medium" v-model="task.priority" />
+                Medium
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="radio" value="high" v-model="task.priority" />
+                High
+              </label>
+            </div>
+          </div>
+
+
           <label>
             <input type="checkbox" v-model="task.is_recurring" />
             Is Recurring?
@@ -149,6 +173,7 @@ const task = ref({
   end_date: '',
   due_date: '',
   status: '',
+  priority:'',
   is_completed: false,
   completed_at: '',
   is_recurring: false,
@@ -170,6 +195,7 @@ const handleSubmit = async() => {
     formData.append('end_date', task.value.end_date || '')
     formData.append('due_date', task.value.due_date || '')
     formData.append('status', 'pending')
+    formData.append('priority', task.value.priority || '')
     formData.append('is_completed', task.value.is_completed ? '1' : '0')
     formData.append('completed_at', task.value.completed_at || '')
     formData.append('is_recurring', task.value.is_recurring ? '1' : '0')
@@ -185,6 +211,8 @@ const handleSubmit = async() => {
       formData.append('custom_date', task.value.custom_date || '')
       formData.append('custom_time', task.value.custom_time || '')
     }
+
+    // console.log(task.value.priority)
 
 
     const response = await api.post('/tasks', formData);
