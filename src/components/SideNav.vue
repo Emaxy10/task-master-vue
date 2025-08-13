@@ -1,46 +1,32 @@
 <template>
-  <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2 class="sidebar-title">TaskMaster</h2>
-      <nav class="sidebar-nav">
-        <router-link to="/create/task">Add Task</router-link>
-        <router-link to="/tasks">All Tasks</router-link>
-        <router-link to="/tasks/today">Today</router-link>
-      </nav>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <router-view />
-    </main>
-  </div>
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <router-link to="/create/task">Add Task</router-link>
+      <router-link to="/tasks">All Tasks</router-link>
+      <router-link to="/task/completed">Completed Task</router-link>
+      <router-link to="/task/overdue">Overdue Task</router-link>
+    </nav>
+  </aside>
 </template>
 
-<style scoped> 
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
+<style scoped>
 .sidebar {
+  position: fixed;
+  top: 60px; /* same height as header */
+  left: 0;
   width: 220px;
+  height: calc(100vh - 60px); /* fills remaining space */
   background-color: #2c3e50;
-  color: white;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px 15px;
+  overflow-y: auto;
 }
 
-.sidebar-title {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  margin-top: 0; /* no extra spacing */
 }
 
 .sidebar-nav a {
@@ -55,11 +41,4 @@
 .sidebar-nav a:hover {
   background-color: #34495e;
 }
-
-.main-content {
-  flex: 1;
-  padding: 30px;
-  background-color: #f8f9fa;
-}
-
 </style>

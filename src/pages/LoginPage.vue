@@ -27,7 +27,7 @@
         </div>
 
         <div class="form-footer">
-          <RouterLink to="/forgot-password">Forgot Password?</RouterLink>
+          <RouterLink to="">Forgot Password?</RouterLink>
         </div>
 
         <button type="submit" class="submit-btn">Login</button>
@@ -71,7 +71,7 @@ const handleLogin = async () => {
     });
 
     authStore.setUser(response.data.user)
-    router.push('/profile')
+    router.push('/')
   }catch(error){
      errorMessage.value = 'Login failed. Please check your credentials.';
   }

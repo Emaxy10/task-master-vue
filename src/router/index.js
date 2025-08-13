@@ -1,19 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '@/pages/LoginPage.vue'
-import TaskAppIntro from '@/components/TaskAppIntro.vue'
+import TaskAppIntro from '@/pages/TaskAppIntro.vue'
 import RegistrationPage from '@/pages/RegistrationPage.vue'
 import CreateTask from '@/pages/CreateTask.vue'
-import UserProfilePage from '@/pages/UserProfilePage.vue'
+import UserProfilePage from '@/pages/TasksPage.vue'
 import EditTaskPage from '@/pages/EditTaskPage.vue'
 import TaskPage from '@/pages/TaskPage.vue'
 import SearchResultPage from '@/pages/SearchResultPage.vue'
 import SubTaskPage from '@/pages/SubTaskPage.vue'
+import CompletedTasks from '@/pages/CompletedTasks.vue'
+import OverdueTask from '@/pages/OverdueTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
   {
     path: '/',
-    name:'task-intro',
+    name:'home',
     component: TaskAppIntro
   },
   {
@@ -30,8 +32,8 @@ const routes = [
     component: CreateTask
   }
   ,{
-    path: '/profile',
-    name: 'user-profile',
+    path: '/tasks',
+    name: 'user-tasks',
     component: UserProfilePage
   },{
     path: '/task/edit/:id',
@@ -49,6 +51,14 @@ const routes = [
       path: '/task/subtask',
       name:'sub_task',
       component: SubTaskPage
+  },{
+      path: '/task/completed',
+      name:'completed_tasks',
+      component: CompletedTasks
+  },{
+      path: '/task/overdue',
+      name:'overdue_tasks',
+      component: OverdueTask
   }
 ]
 

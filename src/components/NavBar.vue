@@ -8,7 +8,7 @@
       <router-link to="/login">Login</router-link>
       <router-link to="/register">Register</router-link>
       <router-link to="/create/task">Add Task</router-link>
-      <router-link to="/profile">Profile</router-link>
+      <!-- <router-link to="/profile">Profile</router-link> -->
     </nav>
 
     <!-- Search bar on the right -->
@@ -51,7 +51,14 @@ const perormSearch = () =>{
   padding: 16px 24px;
   background-color: #635757;
   border-bottom: 1px solid #ddd;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 1000;
 }
+
 
 .logo {
   font-size: 1.5rem;
