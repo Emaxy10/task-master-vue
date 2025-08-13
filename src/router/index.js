@@ -7,6 +7,7 @@ import UserProfilePage from '@/pages/UserProfilePage.vue'
 import EditTaskPage from '@/pages/EditTaskPage.vue'
 import TaskPage from '@/pages/TaskPage.vue'
 import SearchResultPage from '@/pages/SearchResultPage.vue'
+import SubTaskPage from '@/pages/SubTaskPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -44,6 +45,10 @@ const routes = [
       path: '/search/',
       name:'search_results',
       component: SearchResultPage
+  },{
+      path: '/task/subtask',
+      name:'sub_task',
+      component: SubTaskPage
   }
 ]
 

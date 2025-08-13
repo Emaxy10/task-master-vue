@@ -74,6 +74,30 @@
           />
         </div>
 
+
+        <!-- //Priority -->
+          <div class="form-group" style="width: 100px;" >
+            <label><strong>Select Priority:</strong></label>
+            <div>
+              <label :style="{ backgroundColor: task.priority === 'low' ? 'green' : '', padding: '6px 12px', borderRadius: '6px', color: 'white' }">
+                <input type="radio" value="low" v-model="task.priority" />
+                Low
+              </label>
+            </div>
+            <div>
+              <label :style="{ backgroundColor: task.priority === 'medium' ? 'orange' : '', padding: '6px 12px', borderRadius: '6px', color: 'white' }">
+                <input type="radio" value="medium" v-model="task.priority" />
+                Medium
+              </label>
+            </div>
+            <div>
+              <label :style="{ backgroundColor: task.priority === 'high' ? 'red' : '', padding: '6px 12px', borderRadius: '6px', color: 'white' }">
+                <input type="radio" value="high" v-model="task.priority" />
+                High
+              </label>
+            </div>
+          </div>
+
         <div class="form-group" v-if="task.is_recurring">
   <label>Recurrence Rule</label>
   <div class="radio-group">
@@ -156,6 +180,7 @@ const task = ref({
   end_date: '',
   due_date: '',
   status: '',
+   priority:'',
   is_completed: false,
   completed_at: '',
   is_recurring: false,
@@ -187,6 +212,7 @@ const handleSubmit = async() => {
     formData.append('end_date', task.value.end_date || '')
     formData.append('due_date', task.value.due_date || '')
     formData.append('status', 'pending')
+    formData.append('priority', task.value.priority || '')
     formData.append('is_completed', task.value.is_completed ? '1' : '0')
     formData.append('completed_at', task.value.completed_at || '')
     formData.append('is_recurring', task.value.is_recurring ? '1' : '0')

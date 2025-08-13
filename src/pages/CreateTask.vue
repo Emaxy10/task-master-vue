@@ -144,8 +144,13 @@
   </div>
 </div>
 
+        <router-link to="/task/subtask" class="btn green-btn">
+        Add Sub Task
+      </router-link>
 
-        <button type="submit" class="submit-btn">Save Task</button>
+      <button type="submit" class="btn green-btn">
+        Save Task
+      </button>
       </form>
     </div>
   </div>
@@ -341,4 +346,6 @@ select:focus {
 .submit-btn:hover {
   background-color: #0056b3;
 }
+
+
 </style>
