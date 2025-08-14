@@ -223,7 +223,7 @@ const handleSubmit = async() => {
     const response = await api.post('/tasks', formData);
     console.log(response.data)
 
-    router.push('/profile')
+    router.push('/tasks')
 
   }catch(error){
     console.error('Task could not be created:', error.response?.data || error.message);

@@ -10,6 +10,7 @@ import SearchResultPage from '@/pages/SearchResultPage.vue'
 import SubTaskPage from '@/pages/SubTaskPage.vue'
 import CompletedTasks from '@/pages/CompletedTasks.vue'
 import OverdueTask from '@/pages/OverdueTask.vue'
+import OngoingTask from '@/pages/OngoingTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -59,6 +60,10 @@ const routes = [
       path: '/task/overdue',
       name:'overdue_tasks',
       component: OverdueTask
+  },{
+      path: '/task/ongoing',
+      name:'ongoing_tasks',
+      component: OngoingTask
   }
 ]
 

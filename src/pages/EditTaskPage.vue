@@ -232,7 +232,7 @@ const handleSubmit = async() => {
 
     const response = await api.put(`/tasks/${task_Id.value}`, formData);
     console.log(response.data)
-    router.push('/profile')
+    router.push('/tasks')
 
   }catch(error){
     console.error('Task could not be created:', error.response?.data || error.message);

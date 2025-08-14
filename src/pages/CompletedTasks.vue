@@ -37,7 +37,9 @@ import { ref, onMounted } from 'vue';
 
 const tasks = ref([])
 
-onMounted(async() => {
+
+
+const fetchTask = async() => {
         try{
             const response = await api.get('/tasks/completed')
             tasks.value = response.data
@@ -46,7 +48,18 @@ onMounted(async() => {
             console.log(error)
         }
     }
-)
+
+const undoTask = async(id) =>{
+  try{
+    const response = await api.patch(`tasks/${id}/status/undo`)
+    console.log(response.data)
+    fetchTask()
+  }catch(error){
+    console.error(error)
+  }
+}
+
+onMounted(fetchTask)
 
 
 </script>

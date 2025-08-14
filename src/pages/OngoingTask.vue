@@ -1,7 +1,7 @@
 <template>
     <!-- Overdue Tasks -->
 <section class="task-section">
-  <h2>⚠️ Overdue Tasks</h2>
+  <h2>Ongoing Task</h2>
 
   <div v-if="tasks.length > 0">
     <table class="task-table">
@@ -10,6 +10,7 @@
           <th>Title</th>
           <th>Description</th>
           <th>View</th>
+          <th>Done</th>
           <th>Reschedule</th>
           <th>Delete</th>
         </tr>
@@ -22,6 +23,11 @@
             <router-link class="btn btn-view" :to="`/task/${task?.id}`">
               View
             </router-link>
+          </td>
+          <td>
+            <button class="btn btn-done" @click="taskComplete(task.id)" >
+              Done
+            </button>
           </td>
           <td>
             <router-link class="btn btn-reschedule" :to="`/task/edit/${task?.id}`">
@@ -43,26 +49,27 @@
 
 </template>
 
-
 <script setup>
 import api from '@/api';
 import { ref, onMounted } from 'vue';
 
 const tasks = ref([])
 
-const fetchTask = async() => {
-        try{
-            const response = await api.get('/tasks/overdue')
-            tasks.value = response.data
-            // console.log(response.data)
-        }catch(error){
-            console.log(error)
-        }
+const fetchTask = async() =>{
+    try{
+        const response = await api.get('/tasks/ongoing')
+        tasks.value = response.data
+       // console.log(response.data)
+    }catch(error){
+        console.error(error)
     }
-
     
+}
 
-onMounted( fetchTask)
+
+
+onMounted(fetchTask)
+
 
 const deleteTask = async (id) => {
   if (!confirm('Are you sure you want to delete this task?')) return
@@ -74,8 +81,19 @@ const deleteTask = async (id) => {
   }
 }
 
+const taskComplete = async (id) => {
+  if (!confirm('Are you sure you are done this task?')) return
+  try {
+    await api.patch(`/tasks/${id}/complete`)
+    fetchTask()
+  } catch (error) {
+    console.error(' Action failed:', error)
+  }
+}
+
 
 </script>
+
 
 <style scoped>
     .task-table {
@@ -118,6 +136,11 @@ const deleteTask = async (id) => {
 /* Individual Button Colors */
 .btn-view {
   background-color: #4caf50;
+  color: white;
+}
+
+.btn-done {
+  background-color: #472baa;
   color: white;
 }
 

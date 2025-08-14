@@ -5,6 +5,7 @@
       <router-link to="/tasks">All Tasks</router-link>
       <router-link to="/task/completed">Completed Task</router-link>
       <router-link to="/task/overdue">Overdue Task</router-link>
+      <router-link to="/task/ongoing">Ongoing Task</router-link>
     </nav>
   </aside>
 </template>
