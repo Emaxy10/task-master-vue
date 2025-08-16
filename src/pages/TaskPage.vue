@@ -1,27 +1,42 @@
 <template>
-     <div class="task-card">
-    <h2>{{ task.title }}</h2>
-    <p><strong>Description:</strong> {{ task.description }}</p>
-    <p><strong>Status:</strong> 
-      <span :class="task.status === 'pending' ? 'status-pending' : 'status-completed'">{{ task.status }}</span>
-    </p>
-    <p><strong>Start Date:</strong> {{ task.start_date }}</p>
-    <p><strong>End Date:</strong> {{ task.end_date }}</p>
-
-    <p v-if="task.is_recurring">
-      <strong>Recurring:</strong> Yes 
-      <em>({{ task.recurrence_rule }} on {{ capitalize(task.weekly_day) }})</em>
-    </p>
-
-    <p><strong>Completed:</strong> 
-      <span :class="task.is_completed ? 'status-completed' : 'status-not-completed'">
-        {{ task.is_completed ? 'Yes' : 'No' }}
+  <div class="task-card">
+    <!-- Header -->
+    <div class="task-header">
+      <h2>{{ task.title }}</h2>
+      <span :class="['badge', task.status === 'pending' ? 'badge-pending' : 'badge-completed']">
+        {{ task.status }}
       </span>
-    </p>
+    </div>
 
-    <p class="timestamps">
-      Created: {{ formatDate(task.created_at) }} • Updated: {{ formatDate(task.updated_at) }}
-    </p>
+    <!-- Body -->
+    <div class="task-body">
+      <p><strong>Description:</strong> {{ task.description }}</p>
+      
+      <div class="task-dates">
+        <p><strong>Start:</strong> {{ task.start_date }}</p>
+        <p><strong>End:</strong> {{ task.end_date }}</p>
+      </div>
+
+      <p v-if="task.is_recurring">
+        <strong>Recurring:</strong> 
+        <span class="badge badge-recurring">
+          {{ task.recurrence_rule }} ({{ capitalize(task.weekly_day) }})
+        </span>
+      </p>
+
+      <p>
+        <strong>Completed:</strong> 
+        <span :class="task.is_completed ? 'badge badge-completed' : 'badge badge-not-completed'">
+          {{ task.is_completed ? 'Yes' : 'No' }}
+        </span>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="task-footer">
+      <small>Created: {{ formatDate(task.created_at) }}</small>
+      <small>Updated: {{ formatDate(task.updated_at) }}</small>
+    </div>
   </div>
 </template>
 
@@ -50,50 +65,87 @@ onMounted(async() => {
 
 <style scoped>
 .task-card {
-  max-width: 600px;
-  margin: 40px auto;
+  max-width: 650px;
+  margin: 30px auto;
   padding: 24px;
   background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.task-card h2 {
-  margin-bottom: 16px;
-  font-size: 24px;
-  color: #222;
+.task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
 }
 
-.task-card p {
-  margin-bottom: 10px;
+/* Header */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.task-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Body */
+.task-body p {
+  margin: 8px 0;
   font-size: 15px;
+  line-height: 1.5;
+  color: #374151;
 }
 
-.task-card strong {
-  color: #444;
+.task-dates {
+  display: flex;
+  gap: 20px;
+  margin: 10px 0;
 }
 
-.status-pending {
-  color: #d97706; /* amber-700 */
-  font-weight: bold;
+/* Footer */
+.task-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6b7280;
 }
 
-.status-completed {
-  color: #059669; /* green-600 */
-  font-weight: bold;
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
-.status-not-completed {
-  color: #dc2626; /* red-600 */
-  font-weight: bold;
+.badge-pending {
+  background-color: #fef3c7;
+  color: #b45309;
 }
 
-.timestamps {
-  margin-top: 20px;
-  font-size: 13px;
-  color: #777;
+.badge-completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-not-completed {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-recurring {
+  background-color: #e0f2fe;
+  color: #0369a1;
 }
 </style>

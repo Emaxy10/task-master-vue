@@ -4,6 +4,7 @@
       <h2>Create New Task</h2>
 
       <form @submit.prevent="handleSubmit">
+        <!-- Title -->
         <div class="form-group">
           <label for="title">Title *</label>
           <input
@@ -16,6 +17,7 @@
           />
         </div>
 
+        <!-- Description -->
         <div class="form-group">
           <label for="description">Description</label>
           <textarea
@@ -25,6 +27,7 @@
           ></textarea>
         </div>
 
+        <!-- Dates -->
         <div class="form-row">
           <div class="form-group">
             <label for="start_date">Start Date</label>
@@ -35,126 +38,98 @@
             <label for="end_date">End Date</label>
             <input id="end_date" type="date" v-model="task.end_date" />
           </div>
-
-          <!-- <div class="form-group">
-            <label for="due_date">Due Date</label>
-            <input id="due_date" type="date" v-model="task.due_date" />
-          </div> -->
         </div>
 
-        <!-- <div class="form-group">
-          <label for="status">Status *</label>
-          <select id="status" v-model="task.status" required>
-            <option value="">Select status</option>
-            <option value="pending">Pending</option>
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
-            <option value="overdue">Overdue</option>
-          </select>
-        </div> -->
-
+        <!-- Priority + Recurring -->
         <div class="form-row checkbox-row">
-          <!-- <label>
-            <input type="checkbox" v-model="task.is_completed" />
-            Mark as Completed
-          </label> -->
-
-<!-- //Priority -->
-          <div class="form-group" >
-            <label><strong>Select Priority:</strong></label>
-            <div>
-              <label >
-                <input  type="radio" value="low" v-model="task.priority" />
-                Low
+          <!-- Priority -->
+          <div class="form-group">
+            <label><strong>Priority:</strong></label>
+            <div class="radio-group priority">
+              <label class="low">
+                <input type="radio" value="low" v-model="task.priority" hidden />
+                <span>Low</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type="radio" value="medium" v-model="task.priority" />
-                Medium
+              <label class="medium">
+                <input type="radio" value="medium" v-model="task.priority" hidden />
+                <span>Medium</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type="radio" value="high" v-model="task.priority" />
-                High
+              <label class="high">
+                <input type="radio" value="high" v-model="task.priority" hidden />
+                <span>High</span>
               </label>
             </div>
           </div>
 
-
+          <!-- Recurring -->
           <label>
             <input type="checkbox" v-model="task.is_recurring" />
             Is Recurring?
           </label>
         </div>
 
+        <!-- Completed At -->
         <div class="form-group" v-if="task.is_completed">
           <label for="completed_at">Completed At</label>
-          <input
-            id="completed_at"
-            type="date"
-            v-model="task.completed_at"
-          />
+          <input id="completed_at" type="date" v-model="task.completed_at" />
         </div>
 
+        <!-- Recurrence Rule -->
         <div class="form-group" v-if="task.is_recurring">
-  <label>Recurrence Rule</label>
-  <div class="radio-group">
-    <label>
-      <input type="radio" value="daily" v-model="task.recurrence_rule" />
-      Daily
-    </label>
-    <label>
-      <input type="radio" value="weekly" v-model="task.recurrence_rule" />
-      Weekly
-    </label>
-    <label>
-      <input type="radio" value="custom" v-model="task.recurrence_rule" />
-      Custom
-    </label>
-  </div>
-</div>
+          <label>Recurrence Rule</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" value="daily" v-model="task.recurrence_rule" />
+              Daily
+            </label>
+            <label>
+              <input type="radio" value="weekly" v-model="task.recurrence_rule" />
+              Weekly
+            </label>
+            <label>
+              <input type="radio" value="custom" v-model="task.recurrence_rule" />
+              Custom
+            </label>
+          </div>
+        </div>
 
-<!-- Weekly options -->
-<div class="form-group" v-if="task.is_recurring && task.recurrence_rule === 'weekly'">
-  <label>Select a Day</label>
-  <div class="radio-group days">
-    <label v-for="day in daysOfWeek" :key="day.value">
-      <input
-        type="radio"
-        :value="day.value"
-        v-model="task.weekly_day"
-      />
-      {{ day.label }}
-    </label>
-  </div>
-</div>
+        <!-- Weekly Options -->
+        <div class="form-group" v-if="task.is_recurring && task.recurrence_rule === 'weekly'">
+          <label>Select a Day</label>
+          <div class="radio-group days">
+            <label
+              v-for="day in daysOfWeek"
+              :key="day.value"
+              class="day-pill"
+            >
+              <input type="radio" :value="day.value" v-model="task.weekly_day" hidden />
+              <span>{{ day.label }}</span>
+            </label>
+          </div>
+        </div>
 
-<!-- Custom rule -->
-<div class="form-row" v-if="task.is_recurring && task.recurrence_rule === 'custom'">
-  <div class="form-group">
-    <label for="custom_date">Reminder Date</label>
-    <input type="date" id="custom_date" v-model="task.custom_date" />
-  </div>
+        <!-- Custom Reminder -->
+        <div class="form-row" v-if="task.is_recurring && task.recurrence_rule === 'custom'">
+          <div class="form-group">
+            <label for="custom_date">Reminder Date</label>
+            <input type="date" id="custom_date" v-model="task.custom_date" />
+          </div>
 
-  <div class="form-group">
-    <label for="custom_time">Reminder Time</label>
-    <input type="time" id="custom_time" v-model="task.custom_time" />
-  </div>
-</div>
+          <div class="form-group">
+            <label for="custom_time">Reminder Time</label>
+            <input type="time" id="custom_time" v-model="task.custom_time" />
+          </div>
+        </div>
 
-        <router-link to="/task/subtask" class="btn green-btn">
-        Add Sub Task
-      </router-link>
-
-      <button type="submit" class="btn green-btn">
-        Save Task
-      </button>
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">
+          Save Task
+        </button>
       </form>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import api from '@/api'
@@ -235,19 +210,7 @@ const handleSubmit = async() => {
 </script>
 
 <style scoped>
-.radio-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: 10px 0;
-}
-
-.radio-group.days {
-  gap: 10px;
-  flex-direction: column;
-  max-height: 200px;
-}
-
+/* Layout */
 .task-form-container {
   min-height: 100vh;
   background-color: #f8f9fb;
@@ -260,7 +223,7 @@ const handleSubmit = async() => {
 .task-form-box {
   background-color: #ffffff;
   padding: 30px 40px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 100%;
   max-width: 600px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -272,6 +235,7 @@ h2 {
   color: #2c3e50;
 }
 
+/* Form Elements */
 .form-group {
   margin-bottom: 20px;
 }
@@ -330,10 +294,11 @@ select:focus {
   color: #555;
 }
 
+/* Submit Button */
 .submit-btn {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   font-size: 15px;
   font-weight: bold;
@@ -344,8 +309,92 @@ select:focus {
 }
 
 .submit-btn:hover {
-  background-color: #0056b3;
+  background-color: #218838;
 }
 
+/* Priority Radios */
+.radio-group.priority {
+  display: flex;
+  gap: 10px;
+}
 
+.radio-group.priority label {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 8px 0;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.radio-group.priority input {
+  display: none;
+}
+
+.radio-group.priority span {
+  display: inline-block;
+  width: 100%;
+  padding: 6px 0;
+  border-radius: 6px;
+}
+
+/* Priority Colors */
+.low span {
+  border: 2px solid #28a745;
+  color: #28a745;
+}
+.low input:checked + span {
+  background: #28a745;
+  color: #fff;
+}
+
+.medium span {
+  border: 2px solid #ff9800;
+  color: #ff9800;
+}
+.medium input:checked + span {
+  background: #ff9800;
+  color: #fff;
+}
+
+.high span {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+}
+.high input:checked + span {
+  background: #dc3545;
+  color: #fff;
+}
+
+/* Days Pills */
+.radio-group.days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.day-pill {
+  cursor: pointer;
+}
+
+.day-pill span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 2px solid #007bff;
+  border-radius: 20px;
+  color: #007bff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.day-pill input {
+  display: none;
+}
+
+.day-pill input:checked + span {
+  background: #007bff;
+  color: #fff;
+}
 </style>

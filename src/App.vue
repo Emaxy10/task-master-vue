@@ -17,20 +17,19 @@ import AppMain from './components/AppMain.vue'
 
     <!-- Sidebar + Main content in one row -->
     <div class="content-layout">
-      <Sidenav />
+      <Sidenav v-if="authStore.user !== null"/>
       <AppMain />
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Nav from './components/NavBar.vue'
 import Sidenav from './components/SideNav.vue'
 import AppMain from './components/AppMain.vue'
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 
-export default {
-  components: { Nav, Sidenav, AppMain }
-}
 </script>
 
 <style>

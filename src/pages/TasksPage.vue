@@ -54,16 +54,22 @@
                 </span>
               </td>
               <td>
-                <router-link class="btn btn-primary" :to="`/task/${task?.id}`">View</router-link>
+                <router-link class="btn btn-primary" :to="`/task/${task?.id}`">
+                  View
+                </router-link>
               </td>
               <td>
-                <button class="btn btn-danger" @click="deleteTask(task.id)">Delete</button>
+                <button class="btn btn-danger" @click="deleteTask(task.id)">
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p v-else>No tasks found for the selected filters.</p>
+      <p v-else class="no-task-msg">
+        🚫 No tasks found for the selected filters.
+      </p>
     </section>
   </div>
 </template>
@@ -145,8 +151,14 @@ onMounted(fetchTasks)
 <style scoped>
 /* Container */
 .profile-container {
-  padding: 20px;
+  padding: 24px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
 }
 
 /* Filters */
@@ -157,12 +169,20 @@ onMounted(fetchTasks)
 }
 .filters label {
   font-weight: 500;
+  font-size: 0.95rem;
 }
 select {
   margin-left: 8px;
-  padding: 5px 10px;
-  border-radius: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
   border: 1px solid #ccc;
+  background: #fff;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0,123,255,0.3);
+  outline: none;
 }
 
 /* Table */
@@ -170,29 +190,39 @@ select {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 .task-table th, .task-table td {
-  padding: 12px 15px;
+  padding: 14px 16px;
   text-align: left;
+  font-size: 0.95rem;
 }
 .task-table thead {
-  background-color: #f5f5f5;
+  background-color: #f1f3f6;
+  color: #333;
+  font-weight: 600;
+}
+.task-table tr {
+  transition: background 0.2s ease;
+}
+.task-table tr:hover {
+  background-color: #f9f9f9;
 }
 .task-table tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: #fcfcfc;
 }
 
 /* Status badges */
 .status-badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: capitalize;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 .status-badge.ongoing {
   background-color: #eaf4ff;
@@ -210,11 +240,12 @@ select {
 /* Priority badges */
 .priority-badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: capitalize;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 .priority-badge.low {
   background-color: #f1f8e9;
@@ -231,13 +262,14 @@ select {
 
 /* Buttons */
 .btn {
-  padding: 6px 12px;
+  padding: 6px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 .btn-primary {
   background-color: #007bff;
@@ -252,5 +284,13 @@ select {
 }
 .btn-danger:hover {
   background-color: #a71d2a;
+  transform: scale(1.05);
+}
+
+/* No task message */
+.no-task-msg {
+  margin-top: 20px;
+  font-style: italic;
+  color: #666;
 }
 </style>

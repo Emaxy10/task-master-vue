@@ -1,34 +1,40 @@
 <template>
-<h1>Completed Tasks</h1>
-            <table class="task-table">
-        <thead>
-            <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Completed</th>
-            <th>View</th>
-            <th>Undo</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="task in tasks" :key="task.id">
-            <td>{{ task.title }}</td>
-            <td>{{ task.description }}</td>
-            <td>{{ task.completed_at || 'Yes' }}</td>
-            <td>
-                <router-link class="btn btn-primary view-btn" :to="`/task/${task?.id}`">
-                View
-                </router-link>
-            </td>
-            <td>
-                <button class="btn btn-warning undo-btn" @click="undoTask(task.id)">
-                Undo
-                </button>
-            </td>
-            </tr>
-        </tbody>
-        </table>
+  <div class="completed-container">
+    <h1>✅ Completed Tasks</h1>
 
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Completed</th>
+          <th>View</th>
+          <th>Undo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="task in tasks" :key="task.id">
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>
+            <span class="badge badge-success">
+              {{ task.completed_at ? task.completed_at : 'Yes' }}
+            </span>
+          </td>
+          <td>
+            <router-link class="btn btn-primary" :to="`/task/${task?.id}`">
+              View
+            </router-link>
+          </td>
+          <td>
+            <button class="btn btn-warning" @click="undoTask(task.id)">
+              Undo
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
@@ -65,79 +71,95 @@ onMounted(fetchTask)
 </script>
 
 <style scoped>
+.completed-container {
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
 
-/* Move the table higher */
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Table */
 .task-table {
-  margin-top: 0; /* remove extra spacing above */
-}
-
-.main-content {
-  padding-left: 240px; /* space for sidebar */
-  padding-top: 20px;   /* reduce to move table up */
-}
-
-
-    .task-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  font-family: Arial, sans-serif;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .task-table th,
 .task-table td {
-  border: 1px solid #ddd;
-  padding: 12px;
+  padding: 14px 16px;
   text-align: left;
+  font-size: 0.95rem;
 }
 
-.task-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+.task-table thead {
+  background: #f5f6fa;
+  color: #444;
+  font-weight: 600;
+}
+
+.task-table tr {
+  transition: background 0.2s ease;
+}
+.task-table tr:hover {
+  background: #f9fbff;
 }
 
 .task-table tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: #fcfcfc;
 }
 
-.task-table .btn {
+/* Buttons */
+.btn {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   text-align: center;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .btn-primary {
   background-color: #007bff;
-  color: white;
-  border: none;
+  color: #fff;
 }
-
 .btn-primary:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 .btn-warning {
   background-color: #ff9800;
-  color: white;
-  border: none;
+  color: #fff;
 }
-
 .btn-warning:hover {
   background-color: #e68900;
+  transform: translateY(-2px);
 }
 
-.view-btn {
-  width: 100%;
-  display: block;
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
-
-.undo-btn {
-  width: 100%;
+.badge-success {
+  background-color: #e6f7e9;
+  color: #28a745;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-
 </style>
