@@ -5,27 +5,38 @@
 
     <!-- Auth Links & Search -->
     <nav class="auth-buttons">
-      <div v-if="authStore.user === null" class="links">
-        <router-link to="/login" class="btn-link">Login</router-link>
-        <router-link to="/register" class="btn-primary">Register</router-link>
-      </div>
-      <div v-else class="user-section">
-        <!-- Search bar -->
-        <div class="search-bar">
-          <input
-            type="text"
-            placeholder="🔍 Search tasks..."
-            v-model="searchQuery"
-            @keyup.enter="perormSearch()"
-          />
-        </div>
+  <div v-if="authStore.user === null" class="links">
+    <router-link to="/login" class="btn-link">Login</router-link>
+    <router-link to="/register" class="btn-primary">Register</router-link>
+  </div>
 
-        <router-link to="/" class="btn-danger" @click.prevent="logout">
-          Logout
-        </router-link>
-        <!-- <router-link to="/profile">Profile</router-link> -->
+  <div v-else class="user-section">
+    <!-- Search bar -->
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="🔍 Search tasks..."
+        v-model="searchQuery"
+        @keyup.enter="performSearch()"
+      />
+    </div>
+
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" @click="toggleDropdown">
+      <div class="avatar">
+        {{ getInitials(authStore.user.name) }}
       </div>
-    </nav>
+      <div v-if="showDropdown" class="dropdown-menu">
+        <p class="dropdown-username">{{ authStore.user.name }}</p>
+        <router-link to="/" class="dropdown-item">Profile</router-link>
+        <button class="dropdown-item logout-btn" @click.prevent="logout">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
   </header>
 </template>
 
@@ -38,8 +49,9 @@ const authStore = useAuthStore()
 
 const searchQuery = ref('')
 const router = useRouter()
+const showDropdown = ref(false)
 
-const perormSearch = () =>{
+const performSearch = () =>{
    if (!searchQuery.value.trim()) return;
 
    try{
@@ -48,6 +60,15 @@ const perormSearch = () =>{
       console.error(error)
    }
   // alert('You searched')
+}
+
+function toggleDropdown() {
+  showDropdown.value = !showDropdown.value
+}
+
+function getInitials(name) {
+  if (!name) return "U"
+  return name.split(" ").map(n => n[0]).join("").toUpperCase()
 }
 
 function logout() {
@@ -59,6 +80,8 @@ function logout() {
     }
  
 }
+
+
 
 </script>
 
@@ -145,4 +168,79 @@ function logout() {
 .search-bar input:focus {
   box-shadow: 0 0 6px rgba(255,255,255,0.6);
 }
+
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-bar input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.profile-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #007bff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 150px;
+  z-index: 10;
+}
+
+.dropdown-menu p {
+  margin: 0;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.logout-btn {
+  color: #dc2626;
+  font-weight: bold;
+}
+
 </style>
