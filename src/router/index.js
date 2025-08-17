@@ -49,7 +49,7 @@ const routes = [
       name:'search_results',
       component: SearchResultPage
   },{
-      path: '/task/subtask',
+      path: '/tasks/:id/subtasks/create',
       name:'sub_task',
       component: SubTaskPage
   },{

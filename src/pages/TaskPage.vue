@@ -34,27 +34,60 @@
 
     <!-- Footer -->
     <div class="task-footer">
-      <small>Created: {{ formatDate(task.created_at) }}</small>
-      <small>Updated: {{ formatDate(task.updated_at) }}</small>
+      <div>
+        <small>Created: {{ formatDate(task.created_at) }}</small>
+        <small>Updated: {{ formatDate(task.updated_at) }}</small>
+      </div>
+
+      <!-- Add Subtask Button (only if not completed AND end date not passed) -->
+      <button 
+        v-if="canAddSubtask"
+        class="btn-subtask" 
+        @click="addSubtask"
+      >
+        + Add Subtask
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import  {ref, onMounted} from 'vue'
-import { useRoute} from 'vue-router';
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 
 const route = useRoute()
+const router = useRouter()
 const task = ref({})
 const task_Id = ref(route.params.id)
-
 
 const capitalize = (str) => str?.charAt(0).toUpperCase() + str?.slice(1)
 const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
 
-onMounted(async() => {
-    try {
+// ✅ Computed property to decide if subtask button should show
+const canAddSubtask = computed(() => {
+  if (!task.value) return false
+
+  // If task is completed → no subtasks allowed
+  if (task.value.is_completed) return false
+
+  // If no end_date → allow subtasks
+  if (!task.value.end_date) return true
+
+  // Compare end_date with today
+  const now = new Date()
+  const endDate = new Date(task.value.end_date)
+
+  return now <= endDate
+})
+
+const addSubtask = () => {
+  //alert(`Add subtask for task ID: ${task_Id.value}`)
+  router.push(`/tasks/${task_Id.value}/subtasks/create`)
+}
+
+onMounted(async () => {
+  try {
     const response = await api.get(`/tasks/${task_Id.value}`)
     task.value = response.data
   } catch (error) {
@@ -115,6 +148,7 @@ onMounted(async() => {
   border-top: 1px solid #eee;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12px;
   color: #6b7280;
 }
@@ -147,5 +181,21 @@ onMounted(async() => {
 .badge-recurring {
   background-color: #e0f2fe;
   color: #0369a1;
+}
+
+/* Add Subtask Button */
+.btn-subtask {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-subtask:hover {
+  background-color: #2563eb;
 }
 </style>
