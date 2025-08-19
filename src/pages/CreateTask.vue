@@ -34,10 +34,18 @@
             <input id="start_date" type="date" v-model="task.start_date" />
           </div>
 
+           <span v-if="v$.task.start_date.$error">
+               {{ v$.task.start_date.$errors[0].$message }}
+            </span>
+
           <div class="form-group">
             <label for="end_date">End Date</label>
             <input id="end_date" type="date" v-model="task.end_date" />
           </div>
+
+          <span v-if="v$.task.end_date.$error">
+             {{ v$.task.end_date.$errors[0].$message }}
+            </span>
         </div>
 
         <!-- Priority + Recurring -->
@@ -133,8 +141,45 @@
 
 <script setup>
 import api from '@/api'
-import { ref } from 'vue'
+import { ref, computed} from 'vue'
 import router from '@/router';
+import { required, helpers }  from '@vuelidate/validators'
+import useVuelidate from '@vuelidate/core';
+
+
+  // Define today's date (without time)
+const today = new Date()
+today.setHours(0, 0, 0, 0)
+
+// Custom validator: date must not be in the past
+
+const notPastDate = helpers.withMessage(
+    'Date must not be in the past',
+    (value) => {
+      if(!value) return false
+      const inputDate = new Date(value)
+      inputDate.setHours(0,0,0,0)
+      return inputDate >= today
+    }
+)
+
+
+// Custom validator: endDate must be after startDate
+
+
+
+
+const rules = computed(() => ({
+  task: {
+    title: { required },
+    start_date: {
+      notPastDate,
+    },
+    end_date: {
+      notPastDate,
+    }
+  },
+}))
 
 const daysOfWeek = [
   { label: 'Monday', value: 'monday' },
@@ -163,8 +208,16 @@ const task = ref({
   custom_time: '',         // used when recurrence_rule === 'custom'
 })
 
+const v$ = useVuelidate(rules,  {task} )
+
 
 const handleSubmit = async() => {
+
+    //Validate
+        const isValid = await v$.value.$validate();
+        if(!isValid){ 
+            return
+        }
   try{
 
     const formData = new FormData()

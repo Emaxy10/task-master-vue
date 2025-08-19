@@ -68,6 +68,14 @@
 
 <script setup>
 import { ref } from 'vue'
+import api from '@/api'
+import { useRoute, useRouter } from 'vue-router'
+
+
+const route = useRoute()
+const router = useRouter()
+
+const taskId = route.params.id
 
 const task = ref({
   subtasks: [
@@ -83,8 +91,27 @@ const removeSubtask = (index) => {
   task.value.subtasks.splice(index, 1)
 }
 
-const submitSubtasks = () => {
-  console.log("Submitted subtasks:", task.value.subtasks)
-  alert("Subtasks submitted! Check console for details.")
+const submitSubtasks = async() => {
+  try{
+      //upload subtask
+    //   const formData = new FormData()
+
+     
+    // task.value.subtasks.forEach((subtask, index) => {
+    //   formData.append(`subtasks[${index}][title]`, subtask.title)
+    //   formData.append(`subtasks[${index}][description]`, subtask.description)
+    //   formData.append(`subtasks[${index}][end_date]`, subtask.end_date || '') // optional
+    //   formData.append(`subtasks[${index}][is_completed]`, 0)
+    // })
+
+     await api.post(`/tasks/${taskId}/subtasks`, {
+      subtasks: task.value.subtasks
+    })
+    alert("Subtasks submitted successfully!")
+    router.push('/tasks')
+  }catch(error){
+     console.error("Error submitting subtasks:", error.response?.data || error)
+  }
+
 }
 </script>
