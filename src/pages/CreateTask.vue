@@ -164,7 +164,22 @@ const notPastDate = helpers.withMessage(
 )
 
 
-// Custom validator: endDate must be after startDate
+// Custom validator: end_date must be >= start_date
+const endDateAfterStartDate = helpers.withMessage(
+  "End date cannot be earlier than start date",
+  (value, task) => {
+    if (!value) return true // allow empty (if optional)
+    if (!task.start_date) return true // no start_date yet, skip check
+
+    const start = new Date(task.start_date)
+    start.setHours(0,0,0,0)
+    const end = new Date(value)
+    end.setHours(0,0,0,0)
+
+    return end >= start
+  }
+)
+
 
 
 
@@ -177,6 +192,7 @@ const rules = computed(() => ({
     },
     end_date: {
       notPastDate,
+       endDateAfterStartDate
     }
   },
 }))
@@ -228,7 +244,7 @@ const handleSubmit = async() => {
     formData.append('end_date', task.value.end_date || '')
     formData.append('due_date', task.value.due_date || '')
     formData.append('status', 'pending')
-    formData.append('priority', task.value.priority || '')
+    formData.append('priority', task.value.priority || 'low')
     formData.append('is_completed', task.value.is_completed ? '1' : '0')
     formData.append('completed_at', task.value.completed_at || '')
     formData.append('is_recurring', task.value.is_recurring ? '1' : '0')

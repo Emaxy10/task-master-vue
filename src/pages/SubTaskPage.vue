@@ -32,8 +32,18 @@
         <input
           type="date"
           v-model="subtask.end_date"
+          :min="today"
           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 12px;"
         />
+          <div v-if="v$.task.subtasks?.$each?.[index]?.end_date?.$error" style="color: red; font-size: 13px;">
+            <div v-for="err in v$.task.subtasks.$each[index].end_date.$errors" :key="err.$uid">
+              {{ err.$message }}
+            </div>
+          </div>
+
+
+
+
 
         <!-- Add + Remove Buttons Side by Side -->
         <div style="display: flex; justify-content: space-between; margin-top: 8px;">
@@ -67,21 +77,121 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import api from '@/api'
 import { useRoute, useRouter } from 'vue-router'
+import useVuelidate from '@vuelidate/core'
+import { helpers,required } from '@vuelidate/validators'
+
+
 
 
 const route = useRoute()
 const router = useRouter()
 
 const taskId = route.params.id
+const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+const parentTask = ref(null)
+
+onMounted(async () => {
+  const response = await api.get(`/tasks/${taskId}`)
+  parentTask.value = response.data
+})
+
+
+
+// Compare subtask end_date with task end_date
+// const subtaskEndBeforeTaskEnd = (getTaskEndDate) => helpers.withMessage(
+//   "Subtask end date cannot be later than the task's end date",
+//   (value) => {
+//     if (!value) return true // allow empty if optional
+//      const taskEndDate = getTaskEndDate()
+//     if (!taskEndDate) return true // no parent end_date set
+
+//     const subEnd = new Date(value)
+//     subEnd.setHours(0,0,0,0)
+//     const taskEnd = new Date(taskEndDate)
+//     taskEnd.setHours(0,0,0,0)
+
+//     return subEnd <= taskEnd // OR taskEnd => subEnd
+//   }
+// )
+
+// const rules = computed(() => ({
+//   task: {
+//     subtasks: {
+//       $each: {
+//         title: { required },
+//         end_date: { subtaskEndBeforeTaskEnd(() => parentTask.value?.end_date) }
+//       }
+//     }
+//   }
+// }))
+
+// const rules = computed(() => ({
+//   task: {
+//     subtasks: {
+//       $each: {
+//         title: { required },
+//         end_date: {
+//           subtaskEndBeforeTaskEnd: subtaskEndBeforeTaskEnd(() => parentTask.value?.end_date)
+//         }
+//       }
+//     }
+//   }
+// }))
+
+// validator for "not before today"
+const subtaskNotBeforeToday = helpers.withMessage(
+  "Subtask end date cannot be before today",
+  (value) => {
+    if (!value) return true
+    return value >= today
+  }
+)
+
+// validator for "not later than task end"
+const subtaskEndBeforeTaskEnd = helpers.withMessage(
+  "Subtask end date cannot be later than the task's end date",
+  (value) => {
+    if (!value) return true
+    if (!parentTask.value?.end_date) return true
+
+    const subEnd = new Date(value)
+    subEnd.setHours(0,0,0,0)
+    const taskEnd = new Date(parentTask.value.end_date)
+    taskEnd.setHours(0,0,0,0)
+
+    return subEnd <= taskEnd
+  }
+)
+
+const rules = computed(() => ({
+  task: {
+    subtasks: {
+      $each: {
+        title: { required },
+        end_date: {
+          subtaskNotBeforeToday,
+          subtaskEndBeforeTaskEnd
+        }
+      }
+    }
+  }
+}))
+
+
+
+
 
 const task = ref({
   subtasks: [
     { title: '', description: '', end_date: '', is_completed: false }
   ]
 })
+
+const v$ = useVuelidate(rules, { task })
 
 const addSubtask = () => {
   task.value.subtasks.push({ title: '', description: '', end_date: '', is_completed: false })
