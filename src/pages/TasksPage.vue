@@ -35,6 +35,7 @@
               <th>Description</th>
               <th>Status</th>
               <th>Priority</th>
+              <th>SubTasks</th>
               <th>View</th>
               <th>Delete</th>
             </tr>
@@ -52,6 +53,11 @@
                 <span :class="['priority-badge', task.priority]">
                   {{ task.priority }}
                 </span>
+              </td>
+              <td>
+                <router-link class="btn btn-subtask" :to="`/task/${task?.id}/subtasks`">
+                  Subtask
+                </router-link>
               </td>
               <td>
                 <router-link class="btn btn-primary" :to="`/task/${task?.id}`">
@@ -286,6 +292,16 @@ select:focus {
   background-color: #a71d2a;
   transform: scale(1.05);
 }
+
+.btn-subtask {
+  background-color: #fa7b05;
+  color: white;
+}
+.btn-subtask:hover {
+  background-color: #a7671d;
+  transform: scale(1.05);
+}
+
 
 /* No task message */
 .no-task-msg {

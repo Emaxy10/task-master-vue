@@ -11,6 +11,8 @@ import SubTaskPage from '@/pages/SubTaskPage.vue'
 import CompletedTasks from '@/pages/CompletedTasks.vue'
 import OverdueTask from '@/pages/OverdueTask.vue'
 import OngoingTask from '@/pages/OngoingTask.vue'
+import SeeSubTasks from '@/pages/SeeSubTasks.vue'
+import SeeSubTask from '@/pages/SeeSubTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -50,7 +52,7 @@ const routes = [
       component: SearchResultPage
   },{
       path: '/tasks/:id/subtasks/create',
-      name:'sub_task',
+      name:'sub_task_create',
       component: SubTaskPage
   },{
       path: '/task/completed',
@@ -64,6 +66,14 @@ const routes = [
       path: '/task/ongoing',
       name:'ongoing_tasks',
       component: OngoingTask
+  },{
+      path: '/task/:id/subtasks',
+      name:'sub_tasks',
+      component: SeeSubTasks
+  },{
+      path: '/task/:task_id/subtasks/:subtask_id',
+      name:'sub_task',
+      component: SeeSubTask
   }
 ]
 
