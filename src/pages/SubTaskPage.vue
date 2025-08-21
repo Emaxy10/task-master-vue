@@ -101,46 +101,7 @@ onMounted(async () => {
 
 
 
-// Compare subtask end_date with task end_date
-// const subtaskEndBeforeTaskEnd = (getTaskEndDate) => helpers.withMessage(
-//   "Subtask end date cannot be later than the task's end date",
-//   (value) => {
-//     if (!value) return true // allow empty if optional
-//      const taskEndDate = getTaskEndDate()
-//     if (!taskEndDate) return true // no parent end_date set
 
-//     const subEnd = new Date(value)
-//     subEnd.setHours(0,0,0,0)
-//     const taskEnd = new Date(taskEndDate)
-//     taskEnd.setHours(0,0,0,0)
-
-//     return subEnd <= taskEnd // OR taskEnd => subEnd
-//   }
-// )
-
-// const rules = computed(() => ({
-//   task: {
-//     subtasks: {
-//       $each: {
-//         title: { required },
-//         end_date: { subtaskEndBeforeTaskEnd(() => parentTask.value?.end_date) }
-//       }
-//     }
-//   }
-// }))
-
-// const rules = computed(() => ({
-//   task: {
-//     subtasks: {
-//       $each: {
-//         title: { required },
-//         end_date: {
-//           subtaskEndBeforeTaskEnd: subtaskEndBeforeTaskEnd(() => parentTask.value?.end_date)
-//         }
-//       }
-//     }
-//   }
-// }))
 
 // validator for "not before today"
 const subtaskNotBeforeToday = helpers.withMessage(

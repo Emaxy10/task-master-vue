@@ -13,6 +13,7 @@ import OverdueTask from '@/pages/OverdueTask.vue'
 import OngoingTask from '@/pages/OngoingTask.vue'
 import SeeSubTasks from '@/pages/SeeSubTasks.vue'
 import SeeSubTask from '@/pages/SeeSubTask.vue'
+import UpdateSubTask from '@/pages/UpdateSubTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -74,6 +75,10 @@ const routes = [
       path: '/task/:task_id/subtasks/:subtask_id',
       name:'sub_task',
       component: SeeSubTask
+  },{
+      path: '/task/:task_id/subtasks/update/:subtask_id',
+      name:'update_sub_task',
+      component: UpdateSubTask
   }
 ]
 
