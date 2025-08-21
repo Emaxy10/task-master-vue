@@ -85,7 +85,7 @@ onMounted(async () => {
   }
 })
 
-// --- VALIDATIONS ---
+//VALIDATIONS 
 // validator for "not before today"
 const subtaskNotBeforeToday = helpers.withMessage(
   "Subtask end date cannot be before today",
