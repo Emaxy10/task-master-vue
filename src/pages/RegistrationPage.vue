@@ -166,8 +166,9 @@ const handleRegister = async() => {
             formData.append('password', user.value.password)
 
             const response = await api.post(`/register`, formData)
+            alert("Registration Sucessful")
 
-            console.log(response.data)
+            console.log("Rgistration Sucessful", response.data)
             router.push('/login')
         }catch(error){
           console.error('Registration failed:', error.response?.data || error.message);

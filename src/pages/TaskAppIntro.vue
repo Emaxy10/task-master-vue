@@ -1,108 +1,192 @@
 <template>
   <div>
-   
-
     <main>
-      <h1>Welcome to TaskMaster</h1>
-      <p>Organize your day and boost your productivity with our simple and efficient task management app.</p>
+      <h1 class="welcome-title">Welcome to TaskMaster</h1>
+      <p class="welcome-subtext">
+        Organize your day and boost your productivity with our simple and efficient task management app.
+      </p>
 
-      <h2>Why Manage Your Tasks?</h2>
-      <ul>
-        <li>✅ Stay focused and clear about what needs to be done</li>
-        <li>✅ Improve time management and reduce stress</li>
-        <li>✅ Track progress and achieve goals efficiently</li>
-        <li>✅ Prioritize work and avoid last-minute rush</li>
-        <li>✅ Collaborate with teams effortlessly</li>
-      </ul>
+      <!-- Dashboard cards -->
+      <div class="cards-container">
+        <!-- Task Summary -->
+        <div class="card">
+          <h2>📊 Task Summary</h2>
+          <ul>
+            <li><strong>Total Tasks:</strong> {{ tasks.length }}</li>
+            <li><strong>Ongoing:</strong> {{ onGoingTasks }}</li>
+            <li><strong>Completed:</strong> {{ completedTasks }}</li>
+            <li><strong>Overdue:</strong> {{ overdueTasks }}</li>
+          </ul>
+        </div>
+
+        <!-- High Priority -->
+        <div class="card">
+          <h2>🔥 High Priority</h2>
+          <p class="highlight">{{ highPriorityTasks }}</p>
+          <p>Tasks that need urgent attention</p>
+        </div>
+
+        <!-- Team Members -->
+        <div class="card">
+          <h2>👥 Team Members</h2>
+          <p class="highlight">7</p>
+          <p>Active team members collaborating</p>
+        </div>
+      </div>
     </main>
 
-    <footer>
-      &copy; 2025 TaskMaster. All rights reserved.
-    </footer>
+   
+
   </div>
 </template>
 
+
 <script setup>
-//import { RouterLink } from 'vue-router';
+import api from '@/api';
+import { onMounted, ref } from 'vue';
+
+const tasks = ref([]);
+
+const onGoingTasks = ref()
+
+const overDueTasks = ref()
+const completedTasks = ref()
+
+const highPriorityTasks = ref()
+
+const todays_date = new Date()
+
+
+const fetchTasks = async () => {
+  try {
+    const response = await api.get('/user/tasks')
+    tasks.value = response.data.tasks
+
+    // Count ongoing tasks
+    onGoingTasks.value = tasks.value.filter(task => {
+      const taskEndDate = new Date(task.end_date); // convert string to Date
+
+     return (
+        task.status === 'pending' &&
+        taskEndDate >= todays_date &&
+        task.is_completed == 0   // use == since API returns 0/1, not boolean
+      );
+
+    }).length;
+
+
+    // Count Overdue tasks
+    overDueTasks.value = tasks.value.filter(task => {
+      const taskEndDate = new Date(task.end_date); // convert string to Date
+
+     return (
+        task.status === 'pending' &&
+        taskEndDate < todays_date &&
+        task.is_completed == 0   // use == since API returns 0/1, not boolean
+      );
+
+    }).length;
+    
+
+        // Count Complete tasks
+    completedTasks.value = tasks.value.filter(task => {
+
+     return (
+        task.status === 'completed' &&
+        task.is_completed == 1   // use == since API returns 0/1, not boolean
+      );
+
+    }).length;
+
+
+       // High priority tasks
+    highPriorityTasks.value = tasks.value.filter(task => {
+      return(
+         task.priority === 'high' &&
+        task.is_completed == 0 
+      )
+    }).length;
+
+    console.log(tasks.value)
+    console.log("Ongoing :", onGoingTasks.value)
+    console.log("Overdue :", overDueTasks.value)
+  } catch (error) {
+    console.error('Error fetching tasks:', error)
+  }
+}
+
+onMounted(fetchTasks)
+
+  
+
 
 </script>
 
- <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
 
-    body {
-      background-color: #f9f9f9;
-      color: #333;
-    }
+<style scoped>
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
 
-    header {
-      background-color: #2c3e50;
-      color: #fff;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+.card:hover {
+  transform: translateY(-4px);
+}
 
-    .auth-buttons a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #fff;
-      padding: 8px 16px;
-      border: 1px solid #fff;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
+.card h2 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  color: #2c3e50;
+}
 
-    .auth-buttons a:hover {
-      background-color: #fff;
-      color: #2c3e50;
-    }
+.card ul {
+  list-style: none;
+  text-align: left;
+  padding: 0;
+}
 
-    main {
-      padding: 60px 40px;
-      max-width: 800px;
-      margin: auto;
-      text-align: center;
-    }
+.card ul li {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #333;
+}
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
+.highlight {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #e67e22;
+  margin: 10px 0;
+}
 
-    p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+.welcome-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;       /* deep, professional navy */
+  margin-bottom: 10px;
+  text-align: center;   /* center on the page */
+}
 
-    ul {
-      text-align: left;
-      margin-top: 20px;
-      padding-left: 20px;
-    }
+.welcome-subtext {
+  font-size: 1.1rem;
+  color: #555;          /* soft gray for readability */
+  line-height: 1.6;
+  max-width: 600px;     /* keep text from being too wide */
+  margin: 0 auto;       /* center horizontally */
+  text-align: center;
+}
 
-    ul li {
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-    }
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #999;
-      font-size: 0.9rem;
-    }
-  </style>
+
+
+</style>

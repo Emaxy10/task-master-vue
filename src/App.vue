@@ -18,8 +18,9 @@ import AppMain from './components/AppMain.vue'
     <!-- Sidebar + Main content in one row -->
     <div class="content-layout">
       <Sidenav v-if="authStore.user !== null"/>
-      <AppMain />
+      <AppMain  />
     </div>
+    <FooterNav class="footer_nav"/>
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import AppMain from './components/AppMain.vue'
 import Nav from './components/NavBar.vue'
 import Sidenav from './components/SideNav.vue'
 import AppMain from './components/AppMain.vue'
+import FooterNav from './components/FooterNav.vue'
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
@@ -39,21 +41,31 @@ const authStore = useAuthStore()
   min-height: 100vh;
 }
 
-/* Row layout for sidebar + main */
 .content-layout {
   display: flex;
   flex: 1;
+  margin-top: 10px; /* ⬅ space between navbar and sidenav/main */
+  padding-left: 50px;
 }
 
-/* Make sidebar fixed width */
 .content-layout > *:first-child {
-  flex: 0 0 220px;
+  flex: 0 0 220px; /* sidebar fixed width */
+  margin-right: 10px; /* optional: space between sidebar and main */
+  padding-top: 45px;
 }
 
-/* Make main take the rest */
 .content-layout > *:last-child {
   flex: 1;
+  padding: 20px 30px;
+  background: #f9f9f9;
+  border-radius: 8px; /* nice rounded look */
+}
+.footer_nav{
+  margin-left: 50px;
+  padding-left: 20px;
 }
 </style>
+
+
 
 
