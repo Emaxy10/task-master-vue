@@ -12,10 +12,10 @@
         <div class="card">
           <h2>📊 Task Summary</h2>
           <ul>
-            <li><strong>Total Tasks:</strong> {{ tasks.length }}</li>
-            <li><strong>Ongoing:</strong> {{ onGoingTasks }}</li>
-            <li><strong>Completed:</strong> {{ completedTasks }}</li>
-            <li><strong>Overdue:</strong> {{ overdueTasks }}</li>
+            <li><strong>Total Tasks:</strong> {{ tasks.length || 0 }}</li>
+            <li><strong>Ongoing:</strong> {{ onGoingTasks || 0 }}</li>
+            <li><strong>Completed:</strong> {{ completedTasks || 0}}</li>
+            <li><strong>Overdue:</strong> {{ overdueTasks || 0}}</li>
           </ul>
         </div>
 

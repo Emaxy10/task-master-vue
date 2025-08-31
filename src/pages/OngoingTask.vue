@@ -9,16 +9,21 @@
           <tr>
             <th>Title</th>
             <th>Description</th>
-            <th>View</th>
-            <th>Done</th>
-            <th>Reschedule</th>
-            <th>Delete</th>
+            <th>Actions</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="task in tasks" :key="task.id">
             <td>{{ task.title }}</td>
             <td>{{ task.description }}</td>
+            <td><router-link class="btn btn-assign"
+               :to="`/task/${task?.id}/assign`">
+               Assign
+              </router-link></td>
             <td>
               <router-link class="btn btn-view" :to="`/task/${task?.id}`">
                 View
@@ -180,6 +185,10 @@ h2 {
 }
 .btn-delete {
   background-color: #f44336;
+  color: #fff;
+}
+.btn-assign{
+  background-color: #fffb0f;
   color: #fff;
 }
 

@@ -14,6 +14,7 @@ import OngoingTask from '@/pages/OngoingTask.vue'
 import SeeSubTasks from '@/pages/SeeSubTasks.vue'
 import SeeSubTask from '@/pages/SeeSubTask.vue'
 import UpdateSubTask from '@/pages/UpdateSubTask.vue'
+import AssignTaskPage from '@/pages/AssignTaskPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -79,6 +80,10 @@ const routes = [
       path: '/task/:task_id/subtasks/update/:subtask_id',
       name:'update_sub_task',
       component: UpdateSubTask
+  },{
+      path: '/task/:id/assign',
+      name:'assign_tasks',
+      component: AssignTaskPage
   }
 ]
 
