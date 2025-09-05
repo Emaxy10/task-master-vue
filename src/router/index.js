@@ -15,6 +15,7 @@ import SeeSubTasks from '@/pages/SeeSubTasks.vue'
 import SeeSubTask from '@/pages/SeeSubTask.vue'
 import UpdateSubTask from '@/pages/UpdateSubTask.vue'
 import AssignTaskPage from '@/pages/AssignTaskPage.vue'
+import AssignedTask from '@/pages/AssignedTask.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -84,7 +85,11 @@ const routes = [
       path: '/task/:id/assign',
       name:'assign_tasks',
       component: AssignTaskPage
-  }
+  },{
+      path: '/task/assigned',
+      name:'assigned_tasks',
+      component: AssignedTask
+    }
 ]
 
 const router = createRouter({

@@ -11,11 +11,11 @@
 
       <!-- Dropdown for Tasks -->
       <div class="dropdown">
-        <button class="dropdown-btn" @click="toggleDropdown">
+        <button class="dropdown-btn" @click="toggleDropdown('tasks')">
           📂 Tasks
-          <span class="arrow" :class="{ open: isOpen }">▼</span>
+          <span class="arrow" :class="{ open: isTasksOpen }">▼</span>
         </button>
-        <div v-if="isOpen" class="dropdown-content">
+        <div v-if="isTasksOpen" class="dropdown-content">
           <router-link to="/tasks" class="dropdown-link" active-class="active-link">
             📋 All Tasks
           </router-link>
@@ -28,8 +28,30 @@
           <router-link to="/task/ongoing" class="dropdown-link" active-class="active-link">
             🔄 Ongoing
           </router-link>
+
+          <router-link to="/task/assigned" class="dropdown-link" active-class="active-link">
+            📝 Assigned Tasks
+          </router-link>
         </div>
       </div>
+
+
+         <!-- Dropdown for Team -->
+      <div class="dropdown">
+        <button class="dropdown-btn" @click="toggleDropdown('team')">
+          👥 Team
+          <span class="arrow" :class="{ open: isTeamOpen }">▼</span>
+        </button>
+        <div v-if="isTeamOpen" class="dropdown-content">
+          <router-link to="/team/add" class="dropdown-link" active-class="active-link">
+            ➕ Add Member
+          </router-link>
+          <router-link to="/team/my" class="dropdown-link" active-class="active-link">
+            👤 My Team
+          </router-link>
+        </div>
+      </div>
+
     </nav>
   </aside>
 </template>
@@ -37,9 +59,15 @@
 <script setup>
 import { ref } from "vue";
 
-const isOpen = ref(false);
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
+const isTasksOpen = ref(false);
+const isTeamOpen = ref(false);
+
+const toggleDropdown = (menu) => {
+  if (menu === "tasks") {
+    isTasksOpen.value = !isTasksOpen.value;
+  } else if (menu === "team") {
+    isTeamOpen.value = !isTeamOpen.value;
+  }
 };
 </script>
 

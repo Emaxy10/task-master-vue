@@ -64,12 +64,18 @@ const assignTask =async() => {
         console.log("Assigning task to user_id:", selectedUser.value);
         // here you can make an API call to assign
         await api.post(`/tasks/${task_id.value}/assign`, {
-            user_id: selectedUser.value
-        } )
+              user_id: selectedUser.value
+          } )
+
         alert('This tasks has been assigned to your team member')
         router.push('/task/ongoing')
     }catch(error){
-        console.error(error)
+        if (error.response && error.response.status === 422) {
+        alert("This user is already assigned to the task");
+      } else {
+        alert("Something went wrong while assigning the task");
+        console.error(error.response?.data || error.message);
+      }
     }
  
 };
