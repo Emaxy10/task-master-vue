@@ -20,8 +20,9 @@
           <tr v-for="task in tasks" :key="task.id">
             <td>{{ task.title }}</td>
             <td>{{ task.description }}</td>
-            <td><router-link class="btn btn-assign"
-               :to="`/task/${task?.id}/assign`">
+            <td v-if="authStore.user?.subscription?.plan==='team' && isAdminOrSupervisor">
+              <router-link class="btn btn-assign"
+               :to="`/task/${task?.id}/assign`"  >
                Assign
               </router-link></td>
             <td>
@@ -58,7 +59,16 @@
 
 <script setup>
 import api from '@/api';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed } from 'vue';
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const user_roles = computed(() => authStore.user?.roles || []);
+
+// check if user is admin or supervisor
+const isAdminOrSupervisor = computed(() =>
+  user_roles.value.some(role => role.name === "admin" || role.name === "supervisor")
+);
 
 const tasks = ref([])
 

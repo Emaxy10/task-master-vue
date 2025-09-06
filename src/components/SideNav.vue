@@ -29,23 +29,31 @@
             🔄 Ongoing
           </router-link>
 
-          <router-link to="/task/assigned" class="dropdown-link" active-class="active-link">
-            📝 Assigned Tasks
-          </router-link>
+          
         </div>
       </div>
 
 
          <!-- Dropdown for Team -->
-      <div class="dropdown">
+      <div class="dropdown" v-if="authStore.user.subscription.plan === 'team'">
         <button class="dropdown-btn" @click="toggleDropdown('team')">
           👥 Team
           <span class="arrow" :class="{ open: isTeamOpen }">▼</span>
         </button>
         <div v-if="isTeamOpen" class="dropdown-content">
-          <router-link to="/team/add" class="dropdown-link" active-class="active-link">
+          
+          <router-link to="/team/add" class="dropdown-link" active-class="active-link"
+            v-if="isAdminOrSupervisor"
+          >
             ➕ Add Member
           </router-link>
+
+          <router-link to="/task/assigned" class="dropdown-link" active-class="active-link"
+            v-if="isAdminOrSupervisor"
+          >
+            📝 Assigned Tasks
+          </router-link>
+
           <router-link to="/team/my" class="dropdown-link" active-class="active-link">
             👤 My Team
           </router-link>
@@ -57,7 +65,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const user_roles = computed(() => authStore.user?.roles || []);
+
+// check if user is admin or supervisor
+const isAdminOrSupervisor = computed(() =>
+  user_roles.value.some(role => role.name === "admin" || role.name === "supervisor")
+);
 
 const isTasksOpen = ref(false);
 const isTeamOpen = ref(false);
