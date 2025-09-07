@@ -54,7 +54,7 @@
             📝 Assigned Tasks
           </router-link>
 
-          <router-link to="/team/my" class="dropdown-link" active-class="active-link">
+          <router-link to="/team" class="dropdown-link" active-class="active-link">
             👤 My Team
           </router-link>
         </div>
