@@ -18,6 +18,7 @@ import AssignTaskPage from '@/pages/AssignTaskPage.vue'
 import AssignedTask from '@/pages/AssignedTask.vue'
 import AddTeamMember from '@/pages/AddTeamMember.vue'
 import TeamMembers from '@/pages/TeamMembers.vue'
+import TeamMemberTaskPage from '@/pages/TeamMemberTaskPage.vue'
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 const routes = [
@@ -99,6 +100,10 @@ const routes = [
       path: '/team',
       name:'team',
       component: TeamMembers
+    },{
+      path: '/team/member/task',
+      name:'team_member_task',
+      component: TeamMemberTaskPage
     }
 ]
 

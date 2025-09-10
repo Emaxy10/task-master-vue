@@ -40,16 +40,16 @@ const selectedUser = ref("");
 
 onMounted(async () => {
   const response = await api.get(`/tasks/team/members`);
-  users.value = response.data.users;
+  users.value = response.data.members
 
-//  console.log(users.value)
+  console.log(response.data.members)
 });
 
 onMounted(async() =>{
     const res = await api.get(`/tasks/${task_id.value}`)
     task.value = res.data
 
-    console.log(task.value)
+    //console.log(task.value)
 })
 
 

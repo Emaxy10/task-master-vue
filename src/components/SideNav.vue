@@ -57,6 +57,11 @@
           <router-link to="/team" class="dropdown-link" active-class="active-link">
             👤 My Team
           </router-link>
+
+          <router-link to="/team/member/task" class="dropdown-link" active-class="active-link">
+            ✅ My Tasks
+          </router-link>
+          
         </div>
       </div>
 
