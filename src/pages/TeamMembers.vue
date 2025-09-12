@@ -7,14 +7,14 @@
         <tr>
           <th>Name</th>
           <th>Email</th>
-          <th>Action</th>
+          <th v-if="authStore.user?.subscription?.plan==='team' && isAdminOrSupervisor">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="member in team" :key="member.id">
           <td>{{ member.name }}</td>
           <td>{{ member.email }}</td>
-          <td>
+          <td v-if="authStore.user?.subscription?.plan==='team' && isAdminOrSupervisor">
             <button class="remove-btn" @click="removeMember(member.id)">
               Remove Member
             </button>
@@ -28,8 +28,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import api from "@/api";
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const user_roles = computed(() => authStore.user?.roles || []);
 
 const team = ref([]);
 
@@ -46,6 +50,11 @@ const fetchData = async () => {
     console.error(error);
   }
 };
+
+// check if user is admin or supervisor
+const isAdminOrSupervisor = computed(() =>
+  user_roles.value.some(role => role.name === "admin" || role.name === "supervisor")
+);
 
 const removeMember = async (id) => {
   if (!confirm("Are you sure you want to remove this member?")) return;
